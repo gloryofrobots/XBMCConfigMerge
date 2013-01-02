@@ -6,4 +6,4 @@ C:\Python26\python.exe  XBMCConfigMerge.py ^
 --write_logs disable ^
 --log_dir "D:\\Projects\\logs" ^
 --error_reporting verbose ^
---write_backup enable
+--write_backup enablekkk
