@@ -13,8 +13,8 @@ from Graph.GraphQuery import GraphQuery
 def merge(newConfigPath, oldConfigPath, destinationConfigPath, rulesPythonScript, isLogging, logDir, errorReporting, writeBackup):
     #register rules
     MergeRuleFactory.initialise()
-    MergeRuleFactory.registerRule("SingleShot", MergeRuleSingleShot)
-    MergeRuleFactory.registerRule("SectionIntelligence", MergeRuleSectionIntelligence)
+    MergeRuleFactory.registerRule("CopyValue", MergeRuleSingleShot)
+    MergeRuleFactory.registerRule("CopySection", MergeRuleSectionIntelligence)
 
     #register XmlMerger
     merger = XmlMerger()
