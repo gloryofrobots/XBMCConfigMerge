@@ -27,16 +27,5 @@ def main(argv = None):
 #        pass
 
 if __name__ == "__main__":
-    from FileSystem import FileSystem
-    content = FileSystem.fileGetContents("run.bat")
-    parts = content.split(" ")
-    real = []
-    for  part in parts:
-        part = part.strip(" \"^\n")
-        real.append(part)
-        pass
-    #print parts
-    #print real
-    args = real[2:]
-    sys.exit(main(args))
+    sys.exit(main())
     pass
