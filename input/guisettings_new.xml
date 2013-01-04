@@ -1,8 +1,20 @@
 ﻿<settings>
-    <mymusic>
+	<content>
+		<test>11111</test>
+		<!--<test>3333</test>-->
+	</content>
+	
+	<content>
+		<test>22222</test>
+		<test2>fff</test2>
+		<test3>3333</test3>
+	</content>
+    
+	<mymusic>
         <playlist>
             <repeat>true</repeat>
             <shuffle>false</shuffle>
+			<shuffle2>false</shuffle2>
         </playlist>
         <scanning>
             <isscanning>false</isscanning>

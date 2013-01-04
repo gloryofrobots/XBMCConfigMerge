@@ -11,6 +11,15 @@ class GraphNodeXmlDom(GraphNode):
         return self.nodeDom
         pass
 
+    def isSameXmlNode(self, node2):
+        nodeDom2 = node2.getXmlDomElement()
+        if nodeDom2 == self.nodeDom:
+            return True
+            pass
+
+        return False
+        pass
+
     def getParent(self):
         return GraphNodeXmlDom(self.nodeDom.parentNode)
         pass
@@ -78,12 +87,21 @@ class GraphNodeXmlDom(GraphNode):
         self.nodeDom.setAttribute(attrName, val)
         pass
 
-    def removeFromParent( self ):
+    def hasParent(self):
         if self.nodeDom.parentNode is None:
             return False
             pass
 
+        return True
+        pass
+        
+    def removeFromParent( self ):
+        if self.hasParent() is False:
+            return False
+            pass
+        
         self.nodeDom.parentNode.removeChild(self.nodeDom)
+        return True
         pass
 
     def getData(self):

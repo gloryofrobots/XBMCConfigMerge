@@ -9,8 +9,8 @@ class MergeRule(object):
 
     def onParams( self, params ):
         self.name = params.pop( "Name", None )
-        self.firstXmlInput = params.pop( "FirstXmlInput" )
-        self.secondXmlInput = params.pop( "SecondXmlInput" )
+        self.firstXmlInput = params.pop( "FirstXmlInput", None )
+        self.secondXmlInput = params.pop( "SecondXmlInput", None )
         
         self._onParams( params )
         pass

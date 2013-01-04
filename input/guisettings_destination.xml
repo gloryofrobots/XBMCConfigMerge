@@ -1,8 +1,20 @@
 <settings>
-    <mymusic>
+	<content>
+		<test>11111</test>
+		<!--<test>3333</test>-->
+	</content>
+	
+	<content>
+		<test>22222</test>
+		<test2>555655454546</test2>
+		<test3>555655454546</test3>
+	</content>
+    
+	<mymusic>
         <playlist>
             <repeat>true</repeat>
-            <shuffle>true</shuffle>
+            <shuffle>false</shuffle>
+			<shuffle2>qqq</shuffle2>
         </playlist>
         <scanning>
             <isscanning>wwwwww</isscanning>
@@ -35,11 +47,7 @@
             <sortmethod>25</sortmethod>
             <sortorder>1</sortorder>
         </musicnavartists>
-        <musicnavalbums>
-            <viewmode>23123123</viewmode>
-            <sortmethod>12</sortmethod>
-            <sortorder>1</sortorder>
-        </musicnavalbums>
+        
         <musicnavsongs>
             <viewmode>65586</viewmode>
             <sortmethod>7</sortmethod>

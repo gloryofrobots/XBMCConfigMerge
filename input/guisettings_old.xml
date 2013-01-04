@@ -1,8 +1,20 @@
 ﻿<settings>
+	<content>
+		<test>11111</test>
+		<test>44444</test>
+	</content>
+	
+	<content>
+		<test>22222</test>
+		<test2>555655454546</test2>
+		<test3>555655454546</test3>
+	</content>
+	
     <mymusic>
         <playlist>
-            <repeat>true</repeat>
-            <shuffle>true</shuffle>
+            <repeat>ff</repeat>
+            <shuffle>tt</shuffle>
+			<shuffle2>qqq</shuffle2>
         </playlist>
         <scanning>
             <isscanning>wwwwww</isscanning>

@@ -5,10 +5,26 @@ from Error.ErrorHandler import ErrorHandler
 class MergeRuleSectionIntelligence(MergeRule):
     def _onRun( self ):
         self.merge(self.firstXmlInput, self.secondXmlInput)
+        return True
         pass
 
     def _onParams( self, params ):
-        self.blackList = params.pop("BlackList", None)
+        blackList = params.pop("BlackList", None)
+        self.blackList = []
+        
+        if blackList is None:
+            return
+            pass
+        
+        for query in blackList:
+            result = query.execute(self.secondXmlInput)
+            if result is None:
+                ErrorHandler.warning("init black list error. graph query doesn`t work %s" % query)
+                continue
+                pass
+            
+            self.blackList.extend(result)
+            pass
         pass
 
     def getSingles(self, section):
@@ -42,6 +58,20 @@ class MergeRuleSectionIntelligence(MergeRule):
             pass
         pass
 
+    def _isInBlackList(self, node):
+        if self.blackList is None:
+            return False
+            pass
+
+        for blackNode in self.blackList:
+            if blackNode.isSameXmlNode(node) is True:
+                return True
+                pass
+            pass
+
+        return False
+        pass
+    
     def _mergeSection(self, node1, node2):
         section1 = node1.getChildrenGroups()
         section2 = node2.getChildrenGroups()
@@ -54,10 +84,8 @@ class MergeRuleSectionIntelligence(MergeRule):
                 continue
                 pass
 
-            if self.blackList is not None:
-                if tagName2 in self.blackList:
-                    continue
-                    pass
+            if self._isInBlackList(node2) is True:
+                continue
                 pass
 
             node1 = section1Singles[tagName2]

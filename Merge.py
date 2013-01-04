@@ -6,7 +6,9 @@ from Error.ErrorHandler import ErrorHandler
 from XmlMerger.MergeRule.MergeRuleFactory import MergeRuleFactory
 from XmlMerger.MergeRule.MergeRuleSingleShot import MergeRuleSingleShot
 from XmlMerger.MergeRule.MergeRuleSectionIntelligence import MergeRuleSectionIntelligence
+from XmlMerger.MergeRule.MergeRuleDeleteNode import MergeRuleDeleteNode
 
+from XmlMerger.XmlMerger import QUERY_POLICY_ONLY_NEW,QUERY_POLICY_BOTH
 from Graph.GraphQuery import GraphQuery
 
 
@@ -14,6 +16,7 @@ def merge(newConfigPath, oldConfigPath, destinationConfigPath, rulesPythonScript
     #register rules
     MergeRuleFactory.initialise()
     MergeRuleFactory.registerRule("CopyValue", MergeRuleSingleShot)
+    MergeRuleFactory.registerRule("DeleteSection", MergeRuleDeleteNode)
     MergeRuleFactory.registerRule("CopySection", MergeRuleSectionIntelligence)
 
     #register XmlMerger
@@ -52,7 +55,10 @@ def merge(newConfigPath, oldConfigPath, destinationConfigPath, rulesPythonScript
     #merger.addAction( "SectionIntelligence", GraphQuery(("viewstates",)) )
     content = FileSystem.fileGetContents(rulesPythonScript)
 
-    execfile( rulesPythonScript, dict(merger = merger, GraphQuery = GraphQuery) )
+    execfile( rulesPythonScript, dict(merger = merger
+                                      , GraphQuery = GraphQuery
+                                      , QUERY_POLICY_ONLY_NEW = QUERY_POLICY_ONLY_NEW
+                                      , QUERY_POLICY_BOTH = QUERY_POLICY_BOTH) )
     merger.merge()
 
     if writeBackup is True:

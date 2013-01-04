@@ -6,6 +6,9 @@ from Error.ErrorHandler import ErrorHandler
 from Logger import Logger
 from Graph.GraphRootXmlDom import GraphRootXmlDom
 
+QUERY_POLICY_BOTH = 1
+QUERY_POLICY_ONLY_NEW = 2
+
 class XmlMerger(object):
     def __init__(self):
         super(XmlMerger,self).__init__()
@@ -46,8 +49,8 @@ class XmlMerger(object):
         return True
         pass
 
-    def addAction(self, ruleName, query, **params):
-        action = dict( Query = query, RuleName = ruleName, Params = params )
+    def addAction(self, ruleName, query, Policy = QUERY_POLICY_BOTH, **params):
+        action = dict( Query = query, RuleName = ruleName, Params = params, Policy = Policy  )
         self.actions.append(action)
         pass
 
@@ -55,6 +58,54 @@ class XmlMerger(object):
         return self.firstXml.save(path)
         pass
 
+
+    def _initActionBoth(self, action, query, firstDomRoot, secondDomRoot ):
+        firstResult = query.execute(firstDomRoot)
+        if firstResult is None:
+            ErrorHandler.warning( "xml query failed %s  on %s" % (query, self.firstXml) )
+            return False
+            pass
+
+        secondResult = query.execute(secondDomRoot)
+        if secondResult is None:
+            ErrorHandler.warning( "xml query failed %s  on %s" % (query, self.secondXml) )
+            return False
+            pass
+
+        if len(secondResult) != len(firstResult):
+            ErrorHandler.warning( "xml query %s results have incompatible length  %i != %i"
+            % (query,  len(secondResult),len(firstResult) ) )
+            return False
+            pass
+
+        if len(secondResult) != 1:
+            ErrorHandler.warning( "xml query %s only single row result supported , you got %i"
+            % (query,  len(secondResult) ) )
+            return False
+            pass
+
+        action["Params"]["FirstXmlInput"] = firstResult[0]
+        action["Params"]["SecondXmlInput"] = secondResult[0]
+        return True
+        pass
+
+    def _initActionFirst(self, action, query, firstDomRoot ):
+        firstResult = query.execute(firstDomRoot)
+        if firstResult is None:
+            ErrorHandler.warning( "xml query failed %s  on %s" % (query, self.firstXml) )
+            return False
+            pass
+
+        if len(firstResult) != 1:
+            ErrorHandler.warning( "xml query %s only single row result supported , you got %i"
+            % (query,  len(firstResult) ) )
+            return False
+            pass
+
+        action["Params"]["FirstXmlInput"] = firstResult[0]
+        return True
+        pass
+    
     def merge(self):
         firstDomRoot = self.firstXml.getRootNode()
         secondDomRoot = self.secondXml.getRootNode()
@@ -62,32 +113,20 @@ class XmlMerger(object):
         for action in self.actions:
             query = action["Query"]
 
-            firstResult = query.execute(firstDomRoot)
-            if firstResult is None:
-                ErrorHandler.warning( "xml query failed %s  on %s" % (query, self.firstXml) )
+            if action["Policy"] == QUERY_POLICY_BOTH:
+                if self._initActionBoth(action, query, firstDomRoot, secondDomRoot) is False:
+                    continue
+                    pass
+                pass
+            elif action["Policy"] == QUERY_POLICY_ONLY_NEW:
+                if self._initActionFirst(action, query, firstDomRoot) is False:
+                    continue
+                    pass
+                pass
+            else:
+                ErrorHandler.error("Merge Query Policy not Support %s" % str(action["Policy"]) )
                 continue
                 pass
-            
-            secondResult = query.execute(secondDomRoot)
-            if secondResult is None:
-                ErrorHandler.warning( "xml query failed %s  on %s" % (query, self.secondXml) )
-                continue
-                pass
-
-            if len(secondResult) != len(firstResult):
-                ErrorHandler.warning( "xml query %s results have incompatible length  %i != %i"
-                % (query,  len(secondResult),len(firstResult) ) )
-                continue
-                pass
-            
-            if len(secondResult) != 1:
-                ErrorHandler.warning( "xml query %s only single row result supported , you got %i"
-                % (query,  len(secondResult) ) )
-                continue
-                pass
-
-            action["Params"]["FirstXmlInput"] = firstResult[0]
-            action["Params"]["SecondXmlInput"] = secondResult[0]
 
             rule = MergeRuleFactory.getRule( action["RuleName"],  action["Params"] )
             if rule is None:
